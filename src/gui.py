@@ -33,7 +33,7 @@ while running:
     # pygame.draw.circle(screen,(255,255,0),(250,250),75)
     pygame.display.set_caption('image')
  
-    imp = pygame.image.load('C:\\Users\\Yash\\Pictures\\board.png')
+    imp = pygame.image.load(r'./assets/board.png')
     screen.blit(imp, (288, 139))
     pygame.display.flip()
 pygame.quit()
