@@ -18,6 +18,13 @@ class Game:
     def show_board(self):
         for i in self.board[::-1]:
             print(i)
+    
+    def check_win(self):
+        """check for win condition on the board"""
+        for row in self.board[::-1]:
+            pass
+        return None
+
         
 
 
