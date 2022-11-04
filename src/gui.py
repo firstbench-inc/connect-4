@@ -18,7 +18,6 @@ the computation, and the solution,
 
 import pygame
 import game
-import PySimpleGUI as pg
 pygame.init()
 screen = pygame.display.set_mode()
 
