@@ -20,6 +20,14 @@ import pygame
 import game
 
 
+class Button:
+    def __init__(self, img_path: str, pos: (int, int)):
+        self.image = pygame.image.load(img_path).convert_alpha()
+        self.pos = pos
+        self.rect = self.image.get_rect(topleft=pos)
+        return
+
+
 def get_board_cord(x: int, y: int) -> (int, int):
     imgx, imgy = 780, 490
     return ((x // 2) - (imgx // 2), (y // 2) - (imgy // 2))
@@ -34,19 +42,13 @@ board_pos = get_board_cord(screen.get_width(), screen.get_height())
 
 # ------------ columns ------------------
 columns = [
-    pygame.image.load("assets/button_r (1).png").convert_alpha(),
-    pygame.image.load("assets/button_r (2).png").convert_alpha(),
-    pygame.image.load("assets/button_r (3).png").convert_alpha(),
-    pygame.image.load("assets/button_r (4).png").convert_alpha(),
-    pygame.image.load("assets/button_r (5).png").convert_alpha(),
-    pygame.image.load("assets/button_r (6).png").convert_alpha(),
-    pygame.image.load("assets/button_r (7).png").convert_alpha(),
-]
-
-col_coords = [100, 200, 300, 400, 500, 600, 700]
-
-col_rects = [
-    col.get_rect(topleft=(col_coords[cno], 50)) for cno, col in enumerate(columns)
+    Button("assets/button_r (1).png", (100, 50)),
+    Button("assets/button_r (2).png", (200, 50)),
+    Button("assets/button_r (3).png", (300, 50)),
+    Button("assets/button_r (4).png", (400, 50)),
+    Button("assets/button_r (5).png", (500, 50)),
+    Button("assets/button_r (6).png", (600, 50)),
+    Button("assets/button_r (7).png", (700, 50)),
 ]
 
 # ------------ game loop ----------------
@@ -57,13 +59,13 @@ while True:
             exit(0)
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = event.pos
-            for col_no, col in enumerate(col_rects):
-                if col.collidepoint(mouse_pos):
+            for col_no, col in enumerate(columns):
+                if col.rect.collidepoint(mouse_pos):
                     print(f"{col_no + 1} was pressed!")
                 pass
             pass
 
-    screen.blits(((col, (col_coords[i], 50)) for i, col in enumerate(columns)))
+    screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
     screen.blit(board, board_pos)
     pygame.display.update()
     clock.tick(60)
