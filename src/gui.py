@@ -56,7 +56,7 @@ columns = []
 start_point = board_pos[0] + 32
 for i in range(1, 8):
     columns.append(
-        Button(f"assets/button_r ({i}).png", (start_point + 105 * (i - 1), 50))
+        Button(f"assets/button_r ({i}).png", (start_point + 106 * (i - 1), 50))
     )
     pass
 
