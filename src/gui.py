@@ -70,10 +70,13 @@ while True:
             mouse_pos = event.pos
             for col_no, col in enumerate(columns):
                 if col.rect.collidepoint(mouse_pos):
+                    # user has pressed a column button
                     print(f"col {col_no + 1} was pressed!")
                     row_no = 5 - game_state.add_coin(col_no)
                     print(row_no)
+                    # create a coin and add it to the list
                     coins.append(
+                        # updates the game_state
                         place_coin(
                             screen, col_no, row_no, board_pos, game_state.player_turn
                         )
