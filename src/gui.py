@@ -34,22 +34,21 @@ def get_board_cord(x: int, y: int) -> (int, int):
 
 
 pygame.init()
-screen = pygame.display.set_mode((1366 , 780))
+screen = pygame.display.set_mode((1366, 780))
 screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
 board = pygame.image.load(r"./assets/board.png")
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
+print(board_pos)
 
 # ------------ columns ------------------
-columns = [
-    Button("assets/button_r (1).png", (325, 50)),
-    Button("assets/button_r (2).png", (430, 50)),
-    Button("assets/button_r (3).png", (535, 50)),
-    Button("assets/button_r (4).png", (640, 50)),
-    Button("assets/button_r (5).png", (745, 50)),
-    Button("assets/button_r (6).png", (850, 50)),
-    Button("assets/button_r (7).png", (955, 50)),
-]
+columns = []
+start_point = board_pos[0] + 32
+for i in range(1, 8):
+    columns.append(
+        Button(f"assets/button_r ({i}).png", (start_point + 105 * (i - 1), 50))
+    )
+    pass
 
 # ------------ game loop ----------------
 while True:
