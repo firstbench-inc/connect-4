@@ -33,13 +33,23 @@ def get_board_cord(x: int, y: int) -> (int, int):
     return ((x // 2) - (imgx // 2), (y // 2) - (imgy // 2))
 
 
+def place_coin(surface, col_no: int, row_no: int, board_pos: (int, int), player: int):
+    pos_x = board_pos[0] + 71 + 106 * (col_no)
+    pos_y = board_pos[1] + 51 + 77 * (row_no)
+    return pygame.draw.circle(surface, (255, 255 * (1 - player), 0), (pos_x, pos_y), 37)
+
+
+# ------------ pygame init -------------
 pygame.init()
 screen = pygame.display.set_mode((1366, 780))
 screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
 board = pygame.image.load(r"./assets/board.png")
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
-print(board_pos)
+
+# ----------- game init -----------------
+game_state = game.Game()
+coins = []
 
 # ------------ columns ------------------
 columns = []
@@ -60,7 +70,14 @@ while True:
             mouse_pos = event.pos
             for col_no, col in enumerate(columns):
                 if col.rect.collidepoint(mouse_pos):
-                    print(f"{col_no + 1} was pressed!")
+                    print(f"col {col_no + 1} was pressed!")
+                    row_no = 5 - game_state.add_coin(col_no)
+                    print(row_no)
+                    coins.append(
+                        place_coin(
+                            screen, col_no, row_no, board_pos, game_state.player_turn
+                        )
+                    )
                 pass
             pass
 
