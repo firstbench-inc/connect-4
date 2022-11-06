@@ -34,7 +34,7 @@ def get_board_cord(x: int, y: int) -> (int, int):
 
 
 pygame.init()
-screen = pygame.display.set_mode(1366 , 780)
+screen = pygame.display.set_mode((1366 , 780))
 screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
 board = pygame.image.load(r"./assets/board.png")
