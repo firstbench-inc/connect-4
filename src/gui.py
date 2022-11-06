@@ -2,8 +2,8 @@
 Our program, who art in memory,
     called by thy name;
   thy operating system run;
-thy function be done at runtime
-  as it was on development.
+thy function be done at 
+  as it was on development.runtime
 Give us this day our daily output.
 And forgive us our code duplication,
     as we forgive those who
@@ -34,7 +34,7 @@ def get_board_cord(x: int, y: int) -> (int, int):
 
 
 pygame.init()
-screen = pygame.display.set_mode()
+screen = pygame.display.set_mode(1366 , 780)
 screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
 board = pygame.image.load(r"./assets/board.png")
@@ -42,13 +42,13 @@ board_pos = get_board_cord(screen.get_width(), screen.get_height())
 
 # ------------ columns ------------------
 columns = [
-    Button("assets/button_r (1).png", (100, 50)),
-    Button("assets/button_r (2).png", (200, 50)),
-    Button("assets/button_r (3).png", (300, 50)),
-    Button("assets/button_r (4).png", (400, 50)),
-    Button("assets/button_r (5).png", (500, 50)),
-    Button("assets/button_r (6).png", (600, 50)),
-    Button("assets/button_r (7).png", (700, 50)),
+    Button("assets/button_r (1).png", (325, 50)),
+    Button("assets/button_r (2).png", (430, 50)),
+    Button("assets/button_r (3).png", (535, 50)),
+    Button("assets/button_r (4).png", (640, 50)),
+    Button("assets/button_r (5).png", (745, 50)),
+    Button("assets/button_r (6).png", (850, 50)),
+    Button("assets/button_r (7).png", (955, 50)),
 ]
 
 # ------------ game loop ----------------
