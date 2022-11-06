@@ -36,7 +36,7 @@ def get_board_cord(x: int, y: int) -> (int, int):
 def place_coin(surface, col_no: int, row_no: int, board_pos: (int, int), player: int):
     pos_x = board_pos[0] + 71 + 106 * (col_no)
     pos_y = board_pos[1] + 51 + 77 * (row_no)
-    return pygame.draw.circle(surface, (255, 255 * (1 - player), 0), (pos_x, pos_y), 37)
+    return pygame.draw.circle(surface, (255, 255 * (2 - player), 0), (pos_x, pos_y), 37)
 
 
 # ------------ pygame init -------------
