@@ -37,15 +37,16 @@ def place_coin(surface, col_no: int, row_no: int, board_pos: (int, int), player:
     pos_x = board_pos[0] + 71 + 106 * (col_no)
     pos_y = board_pos[1] + 51 + 77 * (row_no)
     if player == 1:
-        return pygame.draw.circle(surface, (125,24,28), (pos_x, pos_y), 37)
+        return pygame.draw.circle(surface, (125, 24, 28), (pos_x, pos_y), 37)
     if player == 2:
-        return pygame.draw.circle(surface, (40,95,71), (pos_x, pos_y), 37)
+        return pygame.draw.circle(surface, (40, 95, 71), (pos_x, pos_y), 37)
 
 
 # ------------ pygame init -------------
 pygame.init()
+running = True
 screen = pygame.display.set_mode((1366, 780))
-#screen.fill((255, 255, 255))
+# screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
 
 board = pygame.image.load(r"./assets/board2.png")
@@ -69,10 +70,10 @@ for i in range(1, 8):
     pass
 
 # ------------ game loop ----------------
-screen.blit(bg, (0,0))
+screen.blit(bg, (0, 0))
 screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
 screen.blit(board, board_pos)
-while True:
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -95,6 +96,11 @@ while True:
                             screen, col_no, row_no, board_pos, game_state.player_turn
                         )
                     )
+                    # check for win
+                    win = game_state.check_win()
+                    if win:
+                        print(f"player {win} won!")
+                        running = False
                 pass
             pass
 
