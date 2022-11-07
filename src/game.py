@@ -25,5 +25,4 @@ class Game:
     def check_win(self):
         """check for win condition on the board"""
         for row in self.board[::-1]:
-            pass
-        return None
+            return None
