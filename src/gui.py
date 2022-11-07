@@ -72,7 +72,10 @@ while True:
                 if col.rect.collidepoint(mouse_pos):
                     # user has pressed a column button
                     print(f"col {col_no + 1} was pressed!")
-                    row_no = 5 - game_state.add_coin(col_no)
+                    row_no = game_state.add_coin(col_no)
+                    if row_no is None:
+                        continue
+                    row_no = 5 - row_no
                     print(row_no)
                     # create a coin and add it to the list
                     coins.append(
