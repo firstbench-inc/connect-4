@@ -36,15 +36,19 @@ def get_board_cord(x: int, y: int) -> (int, int):
 def place_coin(surface, col_no: int, row_no: int, board_pos: (int, int), player: int):
     pos_x = board_pos[0] + 71 + 106 * (col_no)
     pos_y = board_pos[1] + 51 + 77 * (row_no)
-    return pygame.draw.circle(surface, (255, 255 * (2 - player), 0), (pos_x, pos_y), 37)
+    if player == 1:
+        return pygame.draw.circle(surface, (125,24,28), (pos_x, pos_y), 37)
+    if player == 2:
+        return pygame.draw.circle(surface, (40,95,71), (pos_x, pos_y), 37)
 
 
 # ------------ pygame init -------------
 pygame.init()
 screen = pygame.display.set_mode((1366, 780))
-screen.fill((255, 255, 255))
+#screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
-board = pygame.image.load(r"./assets/board.png")
+board = pygame.image.load(r"./assets/board5.png")
+bg = pygame.image.load(r"./assets/bg1.jpg")
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
 
 # ----------- game init -----------------
@@ -61,6 +65,9 @@ for i in range(1, 8):
     pass
 
 # ------------ game loop ----------------
+screen.blit(bg, (0,0))
+screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
+screen.blit(board, board_pos)
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -87,8 +94,6 @@ while True:
                 pass
             pass
 
-    screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
-    screen.blit(board, board_pos)
     pygame.display.update()
     clock.tick(60)
     pass
