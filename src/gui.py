@@ -47,8 +47,12 @@ pygame.init()
 screen = pygame.display.set_mode((1366, 780))
 #screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
-board = pygame.image.load(r"./assets/board5.png")
+
+board = pygame.image.load(r"./assets/board2.png")
 bg = pygame.image.load(r"./assets/bg1.jpg")
+
+board = pygame.image.load(r"assets/board2.png")
+
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
 
 # ----------- game init -----------------

@@ -24,6 +24,40 @@ class Game:
 
     def check_win(self):
         """check for win condition on the board"""
-        for row in self.board[::-1]:
-            pass
-        return None
+        win = False
+
+        for row_no in range(-1,-7,-1):
+            for col_no in range(4):
+                if self.board[row_no][col_no]== self.board[row_no][col_no+1] == self.board [row_no][col_no+2] == self.board[row_no][col_no+3]:
+                    win=True
+                    break
+            if win == 1:
+                break 
+        if win == 0: 
+            for col_no in range(7):
+                for row_no in range(-1,-4,-1):
+                    if self.board[row_no][col_no] == self.board[row_no-1][col_no] == self.board [row_no-2][col_no] == self.board[row_no-3][col_no]:
+                        win = True
+                        break
+                if win == 1:
+                    break
+        if win ==0:
+            for col_no in range(4):
+                for row_no in range(-1,-4,-1):
+                    if self.board[row_no][col_no] == self.board[row_no-1][col_no+1] == self.board [row_no-2][col_no+2] == self.board[row_no-3][col_no+3]:
+                        win = True
+                        break
+                if win == 1:
+                    break 
+        if win == 0:
+            for col_no in range(-1,-5,-1):
+                for row_no in range(-1,-4,-1):
+                    if self.board[row_no][col_no] == self.board[row_no-1][col_no-1] == self.board [row_no-2][col_no-2] == self.board[row_no-3][col_no-3]:
+                        win = True
+                        break
+                if win == 1:
+                    break
+        
+        return win
+                   
+           
