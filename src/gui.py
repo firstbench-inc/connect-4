@@ -67,9 +67,7 @@ def intro():
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print("meow")
                 vid.__del__()
-                print("meow deleted")
                 main_game()
                 return
 
