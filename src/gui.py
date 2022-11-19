@@ -18,7 +18,7 @@ the computation, and the solution,
 
 import pygame
 import game
-
+from pyvidplayer import Video
 
 class Button:
     def __init__(self, img_path: str, pos: (int, int)):
@@ -44,10 +44,16 @@ def place_coin(surface, col_no: int, row_no: int, board_pos: (int, int), player:
 
 # ------------ pygame init -------------
 pygame.init()
-running = True
+
+# running = True
 screen = pygame.display.set_mode((1366, 780))
-# screen.fill((255, 255, 255))
-clock = pygame.time.Clock()
+# # screen.fill((255, 255, 255))
+# clock = pygame.time.Clock()
+vid = Video('assets/intro.mp4')
+vid.set_size((1366 , 780))
+
+
+
 
 board = pygame.image.load(r"./assets/board2.png")
 bg = pygame.image.load(r"./assets/bg1.jpg")
@@ -55,55 +61,69 @@ bg = pygame.image.load(r"./assets/bg1.jpg")
 board = pygame.image.load(r"assets/board2.png")
 
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
+def intro():
+    while True:
+        vid.draw(screen , (0,0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+               vid.close()
+               main_game()
+def main_game():
+    running = True
+    screen = pygame.display.set_mode((1366, 780))
+    # screen.fill((255, 255, 255))
+    clock = pygame.time.Clock()   
+    # ----------- game init -----------------
+    game_state = game.Game()
+    coins = []
 
-# ----------- game init -----------------
-game_state = game.Game()
-coins = []
+    # ------------ columns ------------------
+    columns = []
+    start_point = board_pos[0] + 32
+    for i in range(1, 8):
+        columns.append(
+            Button(f"assets/button_r ({i}).png", (start_point + 106 * (i - 1), 50))
+        )
+        pass
 
-# ------------ columns ------------------
-columns = []
-start_point = board_pos[0] + 32
-for i in range(1, 8):
-    columns.append(
-        Button(f"assets/button_r ({i}).png", (start_point + 106 * (i - 1), 50))
-    )
-    pass
+    # ------------ game loop ----------------
 
-# ------------ game loop ----------------
-screen.blit(bg, (0, 0))
-screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
-screen.blit(board, board_pos)
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit(0)
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = event.pos
-            for col_no, col in enumerate(columns):
-                if col.rect.collidepoint(mouse_pos):
-                    # user has pressed a column button
-                    print(f"col {col_no + 1} was pressed!")
-                    row_no = game_state.add_coin(col_no)
-                    if row_no is None:
-                        continue
-                    row_no = 5 - row_no
-                    print(row_no)
-                    # create a coin and add it to the list
-                    coins.append(
-                        # updates the game_state
-                        place_coin(
-                            screen, col_no, row_no, board_pos, game_state.player_turn
+    screen.blit(bg, (0, 0))
+    screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
+    screen.blit(board, board_pos)
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos
+                for col_no, col in enumerate(columns):
+                    if col.rect.collidepoint(mouse_pos):
+                        # user has pressed a column button
+                        print(f"col {col_no + 1} was pressed!")
+                        row_no = game_state.add_coin(col_no)
+                        if row_no is None:
+                            continue
+                        row_no = 5 - row_no
+                        print(row_no)
+                        # create a coin and add it to the list
+                        coins.append(
+                            # updates the game_state
+                            place_coin(
+                                screen, col_no, row_no, board_pos, game_state.player_turn
+                            )
                         )
-                    )
-                    # check for win
-                    win = game_state.check_win()
-                    if win:
-                        print(f"player {win} won!")
-                        running = False
+                        # check for win
+                        win = game_state.check_win()
+                        if win:
+                            print(f"player {win} won!")
+                            running = False
+                    pass
                 pass
-            pass
-
-    pygame.display.update()
-    clock.tick(60)
-    pass
+        intro()
+        pygame.display.update()
+        clock.tick(60)
+        pass
+        intro()
