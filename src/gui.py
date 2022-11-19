@@ -49,11 +49,6 @@ pygame.init()
 screen = pygame.display.set_mode((1366, 780))
 # # screen.fill((255, 255, 255))
 # clock = pygame.time.Clock()
-vid = Video('assets/intro.mp4')
-vid.set_size((1366 , 780))
-
-
-
 
 board = pygame.image.load(r"./assets/board2.png")
 bg = pygame.image.load(r"./assets/bg1.jpg")
@@ -61,18 +56,21 @@ bg = pygame.image.load(r"./assets/bg1.jpg")
 board = pygame.image.load(r"assets/board2.png")
 
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
+vid = Video('assets/intro.mp4')
+vid.set_size((1366 , 780))
 def intro():
     while True:
         vid.draw(screen , (0,0))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-               vid.close()
+               vid.__del__()
                main_game()
+
 def main_game():
     running = True
-    screen = pygame.display.set_mode((1366, 780))
-    # screen.fill((255, 255, 255))
+    
+    
     clock = pygame.time.Clock()   
     # ----------- game init -----------------
     game_state = game.Game()
