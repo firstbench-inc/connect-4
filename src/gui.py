@@ -20,6 +20,7 @@ import pygame
 import game
 from pyvidplayer import Video
 
+
 class Button:
     def __init__(self, img_path: str, pos: (int, int)):
         self.image = pygame.image.load(img_path).convert_alpha()
@@ -56,22 +57,24 @@ bg = pygame.image.load(r"./assets/bg1.jpg")
 board = pygame.image.load(r"assets/board2.png")
 
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
-vid = Video('assets/intro.mp4')
-vid.set_size((1366 , 780))
+vid = Video("./assets/intro.mp4")
+vid.set_size((1366, 780))
+
+
 def intro():
     while True:
-        vid.draw(screen , (0,0))
+        vid.draw(screen, (0, 0))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-               vid.__del__()
-               main_game()
+                vid.__del__()
+                main_game()
+
 
 def main_game():
     running = True
-    
-    
-    clock = pygame.time.Clock()   
+
+    clock = pygame.time.Clock()
     # ----------- game init -----------------
     game_state = game.Game()
     coins = []
@@ -110,7 +113,11 @@ def main_game():
                         coins.append(
                             # updates the game_state
                             place_coin(
-                                screen, col_no, row_no, board_pos, game_state.player_turn
+                                screen,
+                                col_no,
+                                row_no,
+                                board_pos,
+                                game_state.player_turn,
                             )
                         )
                         # check for win
@@ -120,8 +127,10 @@ def main_game():
                             running = False
                     pass
                 pass
-        intro()
+        # intro()
         pygame.display.update()
         clock.tick(60)
         pass
-        intro()
+
+
+intro()
