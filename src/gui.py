@@ -57,7 +57,7 @@ bg = pygame.image.load(r"./assets/bg1.jpg")
 board = pygame.image.load(r"assets/board2.png")
 
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
-vid = Video("./assets/intro.mp4")
+vid = Video("./assets/intro1.mp4")
 vid.set_size((1366, 780))
 
 
