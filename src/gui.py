@@ -67,9 +67,9 @@ def intro():
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN or event.key == pygame.K_RETURN:
-                    vid.__del__()
-                    main_game()
-                    return
+                        vid.__del__()
+                        main_game()
+                        return
 
 
 def main_game():
