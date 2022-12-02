@@ -19,7 +19,7 @@ the computation, and the solution,
 import pygame
 import game
 from pyvidplayer import Video
-
+from client import network
 
 class Button:
     def __init__(self, img_path: str, pos: (int, int)):
