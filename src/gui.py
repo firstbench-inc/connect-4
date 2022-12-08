@@ -19,6 +19,7 @@ the computation, and the solution,
 import pygame
 import game
 from pyvidplayer import Video
+from time import time_ns
 
 
 class Button:
@@ -35,12 +36,23 @@ def get_board_cord(x: int, y: int) -> (int, int):
 
 
 def place_coin(surface, col_no: int, row_no: int, board_pos: (int, int), player: int):
-    pos_x = board_pos[0] + 71 + 106 * (col_no)
-    pos_y = board_pos[1] + 51 + 77 * (row_no)
+    pos_x = 71 + 106 * (col_no)
+    pos_y = 51 + 77 * (row_no)
     if player == 1:
         return pygame.draw.circle(surface, (125, 24, 28), (pos_x, pos_y), 37)
     if player == 2:
         return pygame.draw.circle(surface, (40, 95, 71), (pos_x, pos_y), 37)
+
+
+def place_timer(surface, player: int, time: int):
+    font = pygame.font.Font("freesansbold.ttf", 32)
+    if player == 1:
+        timer = font.render("player 1: " + str(time), True, (125, 24, 28))
+        surface.blit(timer, (100, 5))
+    if player == 2:
+        timer = font.render("player 2: " + str(time), True, (40, 95, 71))
+        surface.blit(timer, (1100, 5))
+    return
 
 
 # ------------ pygame init -------------
@@ -54,8 +66,6 @@ screen = pygame.display.set_mode((1366, 780))
 board = pygame.image.load(r"./assets/board2.png")
 bg = pygame.image.load(r"./assets/bg1.jpg")
 
-board = pygame.image.load(r"assets/board2.png")
-
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
 vid = Video("./assets/INTRO3.mp4")
 vid.set_size((1366, 780))
@@ -66,10 +76,12 @@ def intro():
         vid.draw(screen, (0, 0))
         pygame.display.update()
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN or event.key == pygame.K_RETURN:
-                        vid.__del__()
-                        main_game()
-                        return
+            if (
+                event.type == pygame.MOUSEBUTTONDOWN
+            ):  # or event.type == pygame.K_RETURN:
+                vid.__del__()
+                main_game()
+                return
 
 
 def main_game():
@@ -79,6 +91,7 @@ def main_game():
     # ----------- game init -----------------
     game_state = game.Game()
     coins = []
+    timer = time_ns()
 
     # ------------ columns ------------------
     columns = []
@@ -94,7 +107,12 @@ def main_game():
     screen.blit(bg, (0, 0))
     screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
     screen.blit(board, board_pos)
+    print(game_state.player_turn)
     while running:
+        coin_added = False
+        screen.fill((0, 0, 0))
+        screen.blit(bg, (0, 0))
+        screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -105,6 +123,7 @@ def main_game():
                     if col.rect.collidepoint(mouse_pos):
                         # user has pressed a column button
                         print(f"col {col_no + 1} was pressed!")
+                        player = game_state.player_turn
                         row_no = game_state.add_coin(col_no)
                         if row_no is None:
                             continue
@@ -114,13 +133,14 @@ def main_game():
                         coins.append(
                             # updates the game_state
                             place_coin(
-                                screen,
+                                board,
                                 col_no,
                                 row_no,
                                 board_pos,
-                                game_state.player_turn,
+                                player,
                             )
                         )
+                        coin_added = True
                         # check for win
                         win = game_state.check_win()
                         if win:
@@ -128,7 +148,22 @@ def main_game():
                             running = False
                     pass
                 pass
-        # intro()
+
+        if not coin_added:
+            time_left = (time_ns() - timer) // (10**9)
+            if time_left > 15:
+                print(game_state.player_turn)
+                game_state.player_turn = 1 if game_state.player_turn == 2 else 2
+                print("player change", game_state.player_turn)
+                timer = time_ns()
+                place_timer(screen, game_state.player_turn, 15)
+            else:
+                place_timer(screen, game_state.player_turn, 15 - time_left)
+        else:
+            timer = time_ns()
+            place_timer(screen, game_state.player_turn, 15)
+            pass
+        screen.blit(board, board_pos)
         pygame.display.update()
         clock.tick(60)
         pass
