@@ -81,4 +81,3 @@ class Game:
                     break
 
         return win
-
