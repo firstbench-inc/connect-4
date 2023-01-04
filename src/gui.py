@@ -19,7 +19,7 @@ the computation, and the solution,
 import pygame
 import game
 from pyvidplayer import Video
-from client import network
+
 
 class Button:
     def __init__(self, img_path: str, pos: (int, int)):
@@ -28,7 +28,30 @@ class Button:
         self.rect = self.image.get_rect(topleft=pos)
         return
 
-
+class NewButton():
+    #a and b are co-ordinates.
+    def __init__(self,a, b, image, image1): 
+        self.image = image
+        self.image1 =  image1 
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (a,b)
+        self.clicked = False
+    def draw(self):
+        act = False
+        pos = pygame.mouse.get_pos()
+        on_button = self.rect.collidepoint(pos)
+        if on_button:
+            screen.blit(self.image1, self.image1.get_rect(center = self.rect.center))
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False: 
+             self.clicked = True      
+        else: 
+            screen.blit(self.image, self.image.get_rect(center = self.rect.center))
+        if pygame.mouse.get_pressed()[0] == 0 and self.clicked == True:
+                self.clicked = False
+                act = True
+        # screen.blit(self.image, (self.rect.topleft[0],self.rect.topleft[1]))
+        return act    
+                
 def get_board_cord(x: int, y: int) -> (int, int):
     imgx, imgy = 780, 490
     return ((x // 2) - (imgx // 2), (y // 2) - (imgy // 2))
@@ -50,6 +73,10 @@ pygame.init()
 screen = pygame.display.set_mode((1366, 780))
 # # screen.fill((255, 255, 255))
 # clock = pygame.time.Clock()
+start_img = pygame.image.load('./assets/button_(3).png').convert_alpha()
+end_image = pygame.image.load('./assets/button_(2).png').convert_alpha()
+start1_img = pygame.image.load('./assets/button.png').convert_alpha()
+end1_img = pygame.image.load('./assets/button_(1).png').convert_alpha()
 
 board = pygame.image.load(r"./assets/board2.png")
 bg = pygame.image.load(r"./assets/bg1.jpg")
@@ -59,22 +86,41 @@ board = pygame.image.load(r"assets/board2.png")
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
 vid = Video("./assets/INTRO3.mp4")
 vid.set_size((1366, 780))
-
+start_b = NewButton(590,372,start_img, start1_img)
+end_b = NewButton(625,442,end_image, end1_img)
 
 def intro():
     while True:
         vid.draw(screen, (0, 0))
         pygame.display.update()
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN or event.key == pygame.K_RETURN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+
                         vid.__del__()
-                        main_game()
+                        start_window()
                         return
+def start_window():
+    print("cute little kitty cat")
+    run = True
+    while run:
+      screen.fill((237,197,128))
+      
+      if start_b.draw() == True:
+        return main_game()
+      if end_b.draw():
+        run = False
+      for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
 
-
+      pygame.display.update()
+      
+    
+      
 def main_game():
-    running = True
-
+ running = True
+ while True:
+        
     clock = pygame.time.Clock()
     # ----------- game init -----------------
     game_state = game.Game()
@@ -90,7 +136,7 @@ def main_game():
         pass
 
     # ------------ game loop ----------------
-
+      
     screen.blit(bg, (0, 0))
     screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
     screen.blit(board, board_pos)
