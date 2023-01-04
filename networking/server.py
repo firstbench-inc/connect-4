@@ -3,7 +3,7 @@ import sys
 import socket
 from _thread import *
 
-server = '192.168.1.108'
+server = '192.168.40.218'
 port = 5555
 y = socket.socket(socket.AF_INET , socket.SOCK_STREAM) #af_inet is for ipv4 and sock_stream is tcp
 
