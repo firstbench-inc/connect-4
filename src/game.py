@@ -2,6 +2,7 @@ class Game:
     def __init__(self) -> None:
         self.board = [[0 for _ in range(7)] for _ in range(6)]
         self.player_turn = 1
+        self.last_turn = None
 
     def add_coin(self, col_no):
         if col_no > 6:
@@ -16,6 +17,7 @@ class Game:
             pass
         self.board[row][col_no] = self.player_turn
         self.player_turn = 2 if self.player_turn == 1 else 1
+        self.last_turn = (row, col_no)
         return row
 
     def show_board(self):
@@ -82,3 +84,5 @@ class Game:
 
         return win
 
+    def last_move(self):
+        return self.last_turn

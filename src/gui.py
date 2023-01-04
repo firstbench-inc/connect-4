@@ -20,7 +20,9 @@ import pygame
 import game
 from pyvidplayer import Video
 from time import time_ns
-import networking
+from networking import server
+from networking.client import Network
+import threading
 
 
 class Button:
@@ -110,6 +112,38 @@ vid = Video("./assets/INTRO3.mp4")
 vid.set_size((1366, 780))
 start_b = NewButton(590, 372, start_img, start1_img)
 end_b = NewButton(625, 442, end_image, end1_img)
+server_b = NewButton(590, 172, start_img, start1_img)
+client_b = NewButton(590, 72, start_img, start1_img)
+
+
+clock = pygame.time.Clock()
+# ----------- game init -----------------
+game_state = game.Game()
+coins = []
+timer = time_ns()
+
+# ------------ columns ------------------
+columns = []
+start_point = board_pos[0] + 32
+# for i in range(1, 8):
+#     columns.append((start_point + 106 * (i - 1), 50))
+#     # Button(f"assets/button_r ({i}).png", (start_point + 106 * (i - 1), 50))
+#     pass
+for i in range(6):
+    columns.append((106 * i + 53))
+
+# ------------ game loop ----------------
+
+screen.blit(bg, (0, 0))
+# screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
+screen.blit(board, board_pos)
+
+coin_tray = pygame.Surface([1366, 74], pygame.SRCALPHA, 32)
+coin_tray.convert_alpha()
+# coin_tray.fill((255, 0, 0))
+screen.blit(coin_tray, (0, 13))
+move_played = True
+cl_sr = None
 
 
 def intro():
@@ -120,12 +154,11 @@ def intro():
             if event.type == pygame.MOUSEBUTTONDOWN:
 
                 vid.__del__()
-                start_window()
+                start_window(game_state)
                 return
 
 
-def start_window():
-    print("cute little kitty cat")
+def start_window(game_state):
     run = True
     while run:
         screen.fill((237, 197, 128))
@@ -134,6 +167,20 @@ def start_window():
             return main_game()
         if end_b.draw():
             run = False
+        if server_b.draw() == True:
+            cl_sr = ("server", None)
+            server_thread = threading.Thread(
+                target=server.start_server, args=(game_state,)
+            )
+            server_thread.start()
+            # server.start_server(game_state)
+            pass
+        if client_b.draw() == True:
+            meow = Network()
+            print("cat")
+            cl_sr = ("client", meow)
+            game_state.player_turn = 2
+            pass
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -144,36 +191,9 @@ def start_window():
 def main_game(multiplayer: bool = False):
     running = True
     while True:
-
-        clock = pygame.time.Clock()
-        # ----------- game init -----------------
-        game_state = game.Game()
-        coins = []
-        timer = time_ns()
-
-        # ------------ columns ------------------
-        columns = []
-        start_point = board_pos[0] + 32
-        # for i in range(1, 8):
-        #     columns.append((start_point + 106 * (i - 1), 50))
-        #     # Button(f"assets/button_r ({i}).png", (start_point + 106 * (i - 1), 50))
-        #     pass
-        for i in range(6):
-            columns.append((106 * i + 53))
-
-        # ------------ game loop ----------------
-
-        screen.blit(bg, (0, 0))
-        # screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
-        screen.blit(board, board_pos)
-
-        coin_tray = pygame.Surface([1366, 74], pygame.SRCALPHA, 32)
-        coin_tray.convert_alpha()
-        # coin_tray.fill((255, 0, 0))
-        screen.blit(coin_tray, (0, 13))
-
         # my_dog = pygame.Surface([1366, 780])
         # screen.blit(my_dog, (0, 0))
+        prev_move = None
         while running:
             coin_added = False
             # screen.fill((0, 0, 0))
@@ -203,10 +223,9 @@ def main_game(multiplayer: bool = False):
                     pygame.quit()
                     exit(0)
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if multiplayer and game_state.player_turn == 2:
-                        # TODO: Wait for Server Response
-                        pass
-                    else:
+                    if multiplayer and move_played:
+                        continue
+
                         mouse_pos = event.pos
                         posx = mouse_pos[0]
                         if posx < 295:
@@ -252,6 +271,8 @@ def main_game(multiplayer: bool = False):
                             )
                         )
                         coin_added = True
+                        prev_move = game_state.last_move()
+                        move_played = True
                         # check for win
                         win = game_state.check_win()
                         if win:
