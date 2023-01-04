@@ -20,6 +20,7 @@ import pygame
 import game
 from pyvidplayer import Video
 from time import time_ns
+import networking
 
 
 class Button:
@@ -140,7 +141,7 @@ def start_window():
         pygame.display.update()
 
 
-def main_game():
+def main_game(multiplayer: bool = False):
     running = True
     while True:
 
@@ -202,56 +203,61 @@ def main_game():
                     pygame.quit()
                     exit(0)
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = event.pos
-                    posx = mouse_pos[0]
-                    if posx < 295:
-                        posx = 295
-                    if posx > 1072:
-                        posx = 1072
-                    if posx < 295 + 71 + 53:
-                        print(posx - 295 - 71)
-                        col_no = 0
-                    elif posx > 1072 - (71 + 53):
-                        col_no = 6
+                    if multiplayer and game_state.player_turn == 2:
+                        # TODO: Wait for Server Response
+                        pass
                     else:
-                        posx = posx - 295 - 71
-                        col_no = 0
-                        prev = 0
-                        for j, i in enumerate(columns):
-                            if prev < posx < i:
-                                col_no = j
-                                break
-                            else:
-                                prev = i
+                        mouse_pos = event.pos
+                        posx = mouse_pos[0]
+                        if posx < 295:
+                            posx = 295
+                        if posx > 1072:
+                            posx = 1072
+                        if posx < 295 + 71 + 53:
+                            print(posx - 295 - 71)
+                            col_no = 0
+                        elif posx > 1072 - (71 + 53):
+                            col_no = 6
+                        else:
+                            posx = posx - 295 - 71
+                            col_no = 0
+                            prev = 0
+                            for j, i in enumerate(columns):
+                                if prev < posx < i:
+                                    col_no = j
+                                    break
+                                else:
+                                    prev = i
 
-                        # if col_no
-                    print(col_no)
+                            # if col_no
+                        print(col_no)
 
-                    # user has pressed a column button
-                    print(f"col {col_no + 1} was pressed!")
-                    player = game_state.player_turn
-                    row_no = game_state.add_coin(col_no)
-                    if row_no is None:
-                        continue
-                    row_no = 5 - row_no
-                    print(row_no)
-                    # create a coin and add it to the list
-                    coins.append(
-                        # updates the game_state
-                        place_coin(
-                            board,
-                            col_no,
-                            row_no,
-                            board_pos,
-                            player,
+                        # user has pressed a column button
+                        print(f"col {col_no + 1} was pressed!")
+                        player = game_state.player_turn
+                        row_no = game_state.add_coin(col_no)
+                        if row_no is None:
+                            continue
+                        row_no = 5 - row_no
+                        print(row_no)
+                        # create a coin and add it to the list
+                        coins.append(
+                            # updates the game_state
+                            place_coin(
+                                board,
+                                col_no,
+                                row_no,
+                                board_pos,
+                                player,
+                            )
                         )
-                    )
-                    coin_added = True
-                    # check for win
-                    win = game_state.check_win()
-                    if win:
-                        print(f"player {win} won!")
-                        running = False
+                        coin_added = True
+                        # check for win
+                        win = game_state.check_win()
+                        if win:
+                            print(f"player {win} won!")
+                            running = False
+                        pass
                 pass
             pass
 
