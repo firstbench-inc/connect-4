@@ -1,36 +1,46 @@
-import os
-import sys
 import socket
 from _thread import *
+import sys
+
+server = "IPV4 ADDRESS HERE"
+port = 5555
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+try:
+    s.bind((server, port))
+except socket.error as e:
+    str(e)
+
+s.listen(2)
+print("Waiting for a connection, Server Started")
 
 
-def start_server():
-    server = ""
-    port = 5555
-    y = socket.socket(
-        socket.AF_INET, socket.SOCK_STREAM
-    )  # af_inet is for ipv4 and sock_stream is tcp
+def threaded_client(conn):
+    conn.send(str.encode("Connected"))
+    reply = ""
+    while True:
+        try:
+            data = conn.recv(2048)
+            reply = data.decode("utf-8")
 
-    try:
-        y.bind((server, port))
-    except socket.error as i:
-        str(i)
-
-    y.listen(2)
-    print("waiting for connections")
-
-    def threading(connection):
-        while True:
-            inp = connection.recv(1500)
-            out = connection.decode("UTF-8")
-            if not inp:
-                print("no connection")
+            if not data:
+                print("Disconnected")
                 break
             else:
-                print(out)
-                connection.sendall(str.encode(out))
+                print("Received: ", reply)
+                print("Sending : ", reply)
 
-    while True:
-        connection, addr = y.accept()
-        print("connected to: ", addr)
-        start_new_thread(threading, (connection,))
+            conn.sendall(str.encode(reply))
+        except:
+            break
+
+    print("Lost connection")
+    conn.close()
+
+
+while True:
+    conn, addr = s.accept()
+    print("Connected to:", addr)
+
+    start_new_thread(threaded_client, (conn,))
