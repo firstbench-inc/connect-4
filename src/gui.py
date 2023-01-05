@@ -245,7 +245,6 @@ def main_game(multiplayer: bool = False):
                 # if multiplayer and turn 1, computer is server
                 # wait for client response
                 if game_state.player_turn == 2:
-                    print("bhow", game_state.multiplayer_moved)
                     if game_state.multiplayer_moved == True:
                         col_no = game_state.last_move()[1]
                         row_no = game_state.last_move()[0]
