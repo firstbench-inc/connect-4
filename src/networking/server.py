@@ -1,11 +1,16 @@
+from time import sleep
 import socket
 from _thread import *
 import sys
+
 from game import Game
+
+# from  import Game
 
 
 def start_server(game_state: Game):
-    server = "192.168.144.111"
+    # def start_server():
+    server = "192.168.184.111"
     port = 5555
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,14 +24,11 @@ def start_server(game_state: Game):
     print("Waiting for a connection, Server Started")
 
     def send_msg(conn, data):
-        while True:
-            try:
-                conn.sendall(str.encode(data))
-
-            except:
-                break
+        print("sending")
+        conn.sendall(str.encode(data))
 
     def recv(conn):
+        print("receiving")
         while True:
             try:
                 data = conn.recv(2048)
@@ -64,20 +66,27 @@ def start_server(game_state: Game):
 
     prev_data = None
     data = None
+    conn, addr = s.accept()
+    print("Connected to:", addr)
     while True:
-        print("Cat")
-        conn, addr = s.accept()
-        data = "meowmeow"
+        # conn, addr = s.accept()
+        # print("Cat")
         data = game_state.last_move()
-        # if data == prev_data:
-        #     continue
         # blocking function that returns data
-        print("Connected to:", addr)
+        if data == prev_data:
+            continue
+        print("sending", data)
+        send_msg(conn, str(data[0]) + "#" + str(data[1]))
+        prev_data = data
+        print(prev_data, data)
 
         # start_new_thread(send_msg, (conn, data))
 
         # get msg from client
         data = recv(conn)
-        data = data.decode("utf-8")
-        data = data.split("#")
-        game_state.add_coin(data[1])
+        print("recieved", data)
+        coord = data.split("#")
+        game_state.add_coin(int(coord[1]))
+        prev_data = game_state.last_move()
+        game_state.multiplayer_moved = True
+        game_state.player_turn = 2

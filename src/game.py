@@ -3,6 +3,7 @@ class Game:
         self.board = [[0 for _ in range(7)] for _ in range(6)]
         self.player_turn = 1
         self.last_turn = None
+        self.multiplayer_moved = False
 
     def add_coin(self, col_no):
         if col_no > 6:
