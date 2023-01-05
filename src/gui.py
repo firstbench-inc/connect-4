@@ -25,7 +25,7 @@ from networking.client import Network
 import threading
 
 winner = 0
-
+loser = 0
 class Button:
     def __init__(self, img_path: str, pos: (int, int)):
         self.image = pygame.image.load(img_path).convert_alpha()
@@ -362,7 +362,9 @@ def main_game(multiplayer: bool = False):
                         print(f"player {win} won!")
                         running = False
                         global winner
-                        winner = win                                                    
+                        winner = win
+                        global loser
+                        loser = 1 if win == 2 else 2                                                    
                     pass
                 pass
             pass
@@ -397,6 +399,17 @@ def outro(win):
             screen.blit(text, (500, 350) )
             pygame.display.update()
             pygame.time.wait(10000)
+        elif loser:
+            screen.fill((237, 197, 128))
+            pygame.display.update()
+            green = (151, 195, 116)
+            font = pygame.font.Font("freesansbold.ttf", 60)
+            text = font.render(f"Player {win} won", True, green)
+            textRect = text.get_rect()
+            screen.blit(text, (500, 350) )
+            pygame.display.update()
+            pygame.time.wait(10000)
+
 
 intro()
 outro(winner)
