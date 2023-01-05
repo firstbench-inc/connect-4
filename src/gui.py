@@ -19,11 +19,12 @@ the computation, and the solution,
 import pygame
 import game
 from pyvidplayer import Video
-from time import time_ns
+from time import *
 from networking import server
 from networking.client import Network
 import threading
 
+winner = 0
 
 class Button:
     def __init__(self, img_path: str, pos: (int, int)):
@@ -103,6 +104,10 @@ start_img = pygame.image.load("./assets/button_(3).png").convert_alpha()
 end_image = pygame.image.load("./assets/button_(2).png").convert_alpha()
 start1_img = pygame.image.load("./assets/button.png").convert_alpha()
 end1_img = pygame.image.load("./assets/button_(1).png").convert_alpha()
+join_img = pygame.image.load("assets/join_blue.png").convert_alpha()
+join_img1 = pygame.image.load("assets/join_purple.png").convert_alpha()
+host_img = pygame.image.load("assets/host_blue.png").convert_alpha()
+host_img1 = pygame.image.load("assets/host_purple.png").convert_alpha()
 
 board = pygame.image.load(r"./assets/board2.png")
 bg = pygame.image.load(r"./assets/bg1.jpg")
@@ -112,8 +117,8 @@ vid = Video("./assets/INTRO3.mp4")
 vid.set_size((1366, 780))
 start_b = NewButton(590, 372, start_img, start1_img)
 end_b = NewButton(625, 442, end_image, end1_img)
-server_b = NewButton(590, 172, start_img, start1_img)
-client_b = NewButton(590, 72, start_img, start1_img)
+server_b = NewButton(580, 272, host_img, host_img1)
+client_b = NewButton(580, 172, join_img, join_img1)
 
 
 clock = pygame.time.Clock()
@@ -190,15 +195,15 @@ def start_window(game_state):
 
 
 def main_game(multiplayer: bool = False):
-    running = True
-    # timer = time_ns()
-    move_played = True
-    prev_move = None
-    screen.blit(bg, (0, 0))
-    screen.blit(coin_tray, (0, 13))
-    screen.blit(board, board_pos)
-    pygame.display.update()
-    while True:
+        running = True
+        # timer = time_ns()
+        move_played = True
+        prev_move = None
+        screen.blit(bg, (0, 0))
+        screen.blit(coin_tray, (0, 13))
+        screen.blit(board, board_pos)
+        pygame.display.update()
+    #while True:
         # my_dog = pygame.Surface([1366, 780])
         # screen.blit(my_dog, (0, 0))
         while running:
@@ -346,16 +351,19 @@ def main_game(multiplayer: bool = False):
                     coin_added = True
                     prev_move = game_state.last_move()
                     move_played = True
-                    if game_state.player_turn == 2:
-                        game_state.multiplayer_moved = False
-                        pass
-                    else:
-                        cl_sr[1].send(str(5 - row_no) + "#" + str(col_no))
+                    if multiplayer:
+                        if game_state.player_turn == 2:
+                            game_state.multiplayer_moved = False
+                            pass
+                        else:
+                            cl_sr[1].send(str(5 - row_no) + "#" + str(col_no))
                     # check for win
                     win = game_state.check_win()
                     if win:
                         print(f"player {win} won!")
                         running = False
+                        global winner
+                        winner = win                                                    
                     pass
                 pass
             pass
@@ -379,6 +387,18 @@ def main_game(multiplayer: bool = False):
             clock.tick(30)
             pass
 
+def outro(win):
+        if winner:
+            screen.fill((237, 197, 128))
+            pygame.display.update()
+            green = (151, 195, 116)
+            font = pygame.font.Font("freesansbold.ttf", 60)
+            text = font.render(f"Player {win} won", True, green)
+            textRect = text.get_rect()
+            screen.blit(text, (500, 350) )
+            pygame.display.update()
+            pygame.time.wait(10000)
 
 intro()
+outro(winner)
 # main_game()
