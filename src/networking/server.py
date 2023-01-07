@@ -10,7 +10,7 @@ from game import Game
 
 def start_server(game_state: Game):
     # def start_server():
-    server = "192.168.184.111"
+    server = "192.168.118.111"
     port = 5555
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
