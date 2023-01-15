@@ -117,7 +117,7 @@ bg = pygame.image.load(r"./assets/bg1.jpg")
 welcome_screen = pygame.image.load(r"assets/welcome_screen.png")
 
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
-vid = Video("./assets/INTRO3.mp4")
+vid = Video("./assets/INTRO4.mp4")
 vid.set_size((1366, 780))
 start_b = NewButton(220, 272, start_img, start1_img)
 end_b = NewButton(220, 512, end_image, end1_img)
