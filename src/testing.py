@@ -243,7 +243,7 @@ def main():
                 if posx > 1072:
                         posx = 1072
                 if turn == PLAYER:
-                    pygame.draw.circle(coin_tray, (125, 24, 28) , (posx, 40), 37)         
+                    pygame.draw.circle(coin_tray, (125, 24, 28) , (posx, 37), 37)         
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Ask for Player 1 Input

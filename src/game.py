@@ -85,5 +85,16 @@ class Game:
 
         return win
 
+    def check_draw(self):
+        draw = True
+        matrix = self.board[::-1]
+        for i in matrix:
+            if 0 in i:
+                draw = False
+                break
+        return draw
+
+
+
     def last_move(self):
         return self.last_turn
