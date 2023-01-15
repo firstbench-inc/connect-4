@@ -27,7 +27,6 @@ import threading
 winner = 0
 loser = 0
 
-
 class Button:
     def __init__(self, img_path: str, pos: (int, int)):
         self.image = pygame.image.load(img_path).convert_alpha()
@@ -100,28 +99,30 @@ pygame.init()
 
 # running = True
 screen = pygame.display.set_mode((1366, 780))
-# # screen.fill((255, 255, 255))
-# clock = pygame.time.Clock()
+
 start_img = pygame.image.load("./assets/button_(3).png").convert_alpha()
 end_image = pygame.image.load("./assets/button_(2).png").convert_alpha()
 start1_img = pygame.image.load("./assets/button.png").convert_alpha()
 end1_img = pygame.image.load("./assets/button_(1).png").convert_alpha()
-join_img = pygame.image.load("assets/join_blue.png").convert_alpha()
-join_img1 = pygame.image.load("assets/join_purple.png").convert_alpha()
+join_img1 = pygame.image.load("assets/join_blue.png").convert_alpha()
+join_img = pygame.image.load("assets/join_purple.png").convert_alpha()
 host_img = pygame.image.load("assets/host_blue.png").convert_alpha()
 host_img1 = pygame.image.load("assets/host_purple.png").convert_alpha()
+ai_button =  pygame.image.load("assets/ai_blue.png").convert_alpha()
+ai_button1 = pygame.image.load("assets/ai_purple.png").convert_alpha()
 
 board = pygame.image.load(r"./assets/board2.png")
 bg = pygame.image.load(r"./assets/bg1.jpg")
+welcome_screen = pygame.image.load(r"assets/welcome_screen.png")
 
 board_pos = get_board_cord(screen.get_width(), screen.get_height())
 vid = Video("./assets/INTRO3.mp4")
 vid.set_size((1366, 780))
-start_b = NewButton(590, 372, start_img, start1_img)
-end_b = NewButton(625, 442, end_image, end1_img)
-server_b = NewButton(580, 272, host_img, host_img1)
-client_b = NewButton(580, 172, join_img, join_img1)
-
+start_b = NewButton(225, 272, start_img, start1_img)
+end_b = NewButton(260, 512, end_image, end1_img)
+server_b = NewButton(220, 392, host_img, host_img1)
+client_b = NewButton(220, 332, join_img, join_img1)
+ai_b = NewButton(235, 452, ai_button, ai_button1)
 
 clock = pygame.time.Clock()
 # ----------- game init -----------------
@@ -140,14 +141,14 @@ for i in range(6):
 
 # ------------ game loop ----------------
 
-screen.blit(bg, (0, 0))
+#screen.blit(bg, (0, 0))
 # screen.blits(((col.image, (col.pos[0], col.pos[1])) for col in columns))
-screen.blit(board, board_pos)
+#screen.blit(board, board_pos)
 
 coin_tray = pygame.Surface([1366, 74], pygame.SRCALPHA, 32)
 coin_tray.convert_alpha()
 # coin_tray.fill((255, 0, 0))
-screen.blit(coin_tray, (0, 13))
+#screen.blit(coin_tray, (0, 13))
 cl_sr = None
 
 
@@ -167,11 +168,13 @@ def start_window(game_state):
     global cl_sr
     run = True
     while run:
-        screen.fill((237, 197, 128))
+        screen.blit(welcome_screen, (0,0))
 
         if start_b.draw() == True:
             return main_game()
         if end_b.draw():
+            run = False
+        if ai_b.draw():
             run = False
         if server_b.draw() == True:
             cl_sr = ("server", None)
@@ -365,8 +368,7 @@ def main_game(multiplayer: bool = False):
                     running = False
                     global winner
                     winner = win
-                    global loser
-                    loser = 1 if win == 2 else 2
+                    
                 pass
             pass
         pass
@@ -397,25 +399,16 @@ def outro(win):
         pygame.display.update()
         green = (151, 195, 116)
         font = pygame.font.Font("freesansbold.ttf", 60)
-        text = font.render(f"Player {win} won", True, green)
+        text = font.render(f"Player {winner} won", True, green)
         textRect = text.get_rect()
         screen.blit(text, (500, 350))
         pygame.display.update()
-        pygame.time.wait(10000)
+        pygame.time.wait(3000)
         return
-    if loser:
-        screen.fill((237, 197, 128))
-        pygame.display.update()
-        green = (151, 195, 116)
-        font = pygame.font.Font("freesansbold.ttf", 60)
-        text = font.render(f"Player {win} won", True, green)
-        textRect = text.get_rect()
-        screen.blit(text, (500, 350))
-        pygame.display.update()
-        pygame.time.wait(10000)
-        return
+    
 
 
 intro()
-outro(winner)
+if winner:
+    outro(winner)
 # main_game()
