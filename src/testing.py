@@ -221,23 +221,29 @@ def main():
 
     turn = random.randint(PLAYER, AI)
 
+    coin_tray = pygame.Surface([1366, 74], pygame.SRCALPHA, 32)
+    coin_tray.convert_alpha()
+
     while not game_over:
 
         screen.blit(bg, (0,0))
+        screen.blit(coin_tray, (0, 13))
         screen.blit(board_img, board_pos)
+        pygame.display.update()
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
 
             if event.type == pygame.MOUSEMOTION:
+                coin_tray.fill((0, 0, 0, 0))
                 posx = event.pos[0]
                 if posx < 295:
                         posx = 295
                 if posx > 1072:
                         posx = 1072
                 if turn == PLAYER:
-                    pygame.draw.circle(bg, (125, 24, 28) , (posx, 60), 37)         
+                    pygame.draw.circle(coin_tray, (125, 24, 28) , (posx, 40), 37)         
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Ask for Player 1 Input
@@ -267,34 +273,36 @@ def main():
                     if is_valid_location(board, col):
                         row = get_next_open_row(board, col)
                         drop_piece(board, row, col, PLAYER_PIECE)
-
+                        draw_board(5-row, col, turn)
+                        print_board(board)
                         if winning_move(board, PLAYER_PIECE):
                             game_over = True
                             return PLAYER_PIECE
-                        draw_board(5-row, col, turn)
+                        
                         turn += 1
                         turn = turn % 2
 
-                        print_board(board)
+                        
                         
 
 
         # # Ask for Player 2 Input
         if turn == AI and not game_over:				
             col, minimax_score = minimax(board, 5, -math.inf, math.inf, True)
-            #print(f'col {col+1} was pressed')
             if is_valid_location(board, col):
                 row = get_next_open_row(board, col)
                 drop_piece(board, row, col, AI_PIECE)
-
+                draw_board(5-row, col, turn)
+                print_board(board)
                 if winning_move(board, AI_PIECE):
                     game_over = True
                     return AI_PIECE
-                print_board(board)
-                draw_board(5-row, col, turn)
+                
+                
                 
                 turn += 1
                 turn = turn % 2
 
         if game_over:
             pygame.time.wait(3000)
+
