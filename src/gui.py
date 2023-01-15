@@ -23,6 +23,7 @@ from time import *
 from networking import server
 from networking.client import Network
 import threading
+import testing
 
 winner = 0
 loser = 0
@@ -175,7 +176,9 @@ def start_window(game_state):
         if end_b.draw():
             run = False
         if ai_b.draw():
-            run = False
+            global winner
+            winner = testing.main()
+            break
         if server_b.draw() == True:
             cl_sr = ("server", None)
             server_thread = threading.Thread(

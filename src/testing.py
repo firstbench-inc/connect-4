@@ -237,7 +237,7 @@ def main():
                 if posx > 1072:
                         posx = 1072
                 if turn == PLAYER:
-                    pygame.draw.circle(screen, (125, 24, 28) , (posx, 37), 37)         
+                    pygame.draw.circle(board_img, (125, 24, 28) , (posx, 37), 37)         
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Ask for Player 1 Input
@@ -270,7 +270,7 @@ def main():
 
                         if winning_move(board, PLAYER_PIECE):
                             game_over = True
-                        
+                            return PLAYER_PIECE
                         draw_board(5-row, col, turn)
                         turn += 1
                         turn = turn % 2
@@ -289,7 +289,7 @@ def main():
 
                 if winning_move(board, AI_PIECE):
                     game_over = True
-
+                    return AI_PIECE
                 print_board(board)
                 draw_board(5-row, col, turn)
                 
@@ -298,4 +298,3 @@ def main():
 
         if game_over:
             pygame.time.wait(3000)
-main()
