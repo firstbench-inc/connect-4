@@ -3,7 +3,7 @@ import random
 import pygame
 import sys
 import math
-
+import time
 
 
 ROW_COUNT = 6
@@ -280,6 +280,11 @@ def main():
                         turn += 1
                         turn = turn % 2
 
+                        screen.blit(bg, (0, 0))
+                        screen.blit(coin_tray, (0, 13))
+                        screen.blit(board_img, board_pos)
+                        pygame.display.update()
+
                         
                         
 
@@ -298,6 +303,11 @@ def main():
     
                 turn += 1
                 turn = turn % 2
+                time.sleep(0.1)#sleep before bliting 
+                screen.blit(bg, (0, 0))
+                screen.blit(coin_tray, (0, 13))
+                screen.blit(board_img, board_pos)
+                pygame.display.update()
 
         pygame.display.update()
 
