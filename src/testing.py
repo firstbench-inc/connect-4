@@ -200,7 +200,7 @@ def draw_board(row_no, col_no, turn):
 
     if turn == PLAYER:
         pygame.draw.circle(board_img, (125, 24, 28), (pos_x, pos_y), 37)
-    else:
+    if turn == AI:
         pygame.draw.circle(board_img, (40, 95, 71), (pos_x, pos_y), 37)
     pygame.display.update()
 
@@ -297,11 +297,11 @@ def main():
                 if winning_move(board, AI_PIECE):
                     game_over = True
                     return AI_PIECE
-                
-                
-                
+    
                 turn += 1
                 turn = turn % 2
+                
+        pygame.display.update()
 
         if game_over:
             pygame.time.wait(3000)
