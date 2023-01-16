@@ -179,7 +179,6 @@ def get_valid_locations(board):
     return valid_locations
 
 def pick_best_move(board, piece):
-
     valid_locations = get_valid_locations(board)
     best_score = -10000
     best_col = random.choice(valid_locations)
@@ -212,7 +211,6 @@ def main():
 
     pygame.init()
 
-    
     board_pos = get_board_cord(screen.get_width(), screen.get_height())
     pygame.display.update()
     columns =[]
@@ -300,7 +298,7 @@ def main():
     
                 turn += 1
                 turn = turn % 2
-                
+
         pygame.display.update()
 
         if game_over:
