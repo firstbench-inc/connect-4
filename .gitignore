@@ -1,4 +1,2 @@
- __pycache__/*
- *.pyc
- *.py
- src/
+__pycache__/*
+*.pyc
